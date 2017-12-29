@@ -1,1 +1,1 @@
-cloning instagram using python, django, and reactgitgit 
+cloning instagram using python, django, and react
