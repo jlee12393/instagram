@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns= [
     url(
-        regex=r'^/$',
+        regex=r'^$',
         view=views.Feed.as_view(),
         name='feed'
     ),
