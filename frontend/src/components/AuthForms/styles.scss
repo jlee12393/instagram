@@ -1,5 +1,6 @@
 @import "/Users/jlee/Desktop/nomadgram/frontend/src/config/_vairables.scss";
-form-component {
+
+.form-component {
   margin-top: 5px;
   display: flex;
   flex-direction: column;
@@ -27,7 +28,7 @@ form-component {
   .button {
     @include blueButton();
     svg {
-      margin-right: 10px;
+      margin-right: 10x;
     }
   }
   .divider {

@@ -1,6 +1,7 @@
 import React from "react";
-import Ionicon from "react-ionicons";
 import styles from "./styles.scss";
+import Ionicon from "react-ionicons";
+
 
 export const LoginForm = props => (
     <div className={styles.formComponent}>
