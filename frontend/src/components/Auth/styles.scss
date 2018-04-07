@@ -1,3 +1,4 @@
+@import "/Users/jlee/Desktop/nomadgram/frontend/src/config/_vairables.scss";
 .auth {
   width: 100%;
   max-width: $max-page-width;
@@ -8,7 +9,7 @@
   justify-content: center;
   align-items: center;
   .column {
-    width: 40%;
+    width: 60%;
     &:last-child {
       width: 35%;
       margin-left: 35px;
