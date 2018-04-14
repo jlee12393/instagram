@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.scss";
 import Loading from "components/Loading";
+// import Loading from "/Users/jlee/Desktop/nomadgram/frontend/src/components/Loading";
 
 const Feed = props => {
     if (props.loading) {
