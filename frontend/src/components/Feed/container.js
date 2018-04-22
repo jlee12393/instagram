@@ -1,20 +1,35 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Feed from "./presenter";
 
 class Container extends Component {
     state = {
         loading: true
     };
-    // static propTypes={
-    //     getFeed: this.propTypes.func.isRequired
-    // };
-
+    static propTypes = {
+        getFeed: PropTypes.func.isRequired,
+        feed: PropTypes.array
+    };
     componentDidMount() {
         const { getFeed } = this.props;
-        getFeed();
+        if (!this.props.feed) {
+            getFeed();
+        } else {
+            this.setState({
+                loading: false
+            });
+        }
     }
+    componentWillReceiveProps = nextProps => {
+        if (nextProps.feed) {
+            this.setState({
+                loading: false
+            });
+        }
+    };
     render() {
-        return <Feed {...this.state} />;
+        const { feed } = this.props;
+        return <Feed {...this.state} feed={feed} />;
     }
 }
 
