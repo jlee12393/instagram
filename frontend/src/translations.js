@@ -14,6 +14,8 @@ export const translations = {
         "Don't have an account?": "계정이 없으신가요?",
         "Have an account?": "가입하셨나요?",
         "Get the app": "어플 다운 받기",
+        "like": "좋아요",
+        "likes": "좋아요",
 
     }
 };

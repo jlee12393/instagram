@@ -1,0 +1,8 @@
+@import "/Users/jlee/Desktop/nomadgram/frontend/src/config/_vairables.scss";
+.time {
+  color: $dark-grey;
+  font-size: $small-font-size - 2;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
