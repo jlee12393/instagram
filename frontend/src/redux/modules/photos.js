@@ -1,128 +1,211 @@
 // imports
 
-import {actionCreators as userActions} from "redux/modules/user";
+import { actionCreators as userActions } from "redux/modules/user";
 
+// actions
 
-//actions
+const SET_FEED = "SET_FEED";
+const LIKE_PHOTO = "LIKE_PHOTO";
+const UNLIKE_PHOTO = "UNLIKE_PHOTO";
+const ADD_COMMENT = "ADD_COMMENT";
 
-const SET_FEED="SET_FEED";
-const LIKE_PHOTO="LIKE_PHOTO";
-const UNLIKE_PHOTO="UNLIKE_PHOTO";
+// action creators
 
-//action creators
-
-function setFeed(feed){
+function setFeed(feed) {
     return {
-        type:SET_FEED,
+        type: SET_FEED,
         feed
-    }
+    };
 }
 
-function doLikePhoto(photoId){
-    return{
+function doLikePhoto(photoId) {
+    return {
         type: LIKE_PHOTO,
         photoId
-    }
+    };
 }
 
 function doUnlikePhoto(photoId) {
     return {
         type: UNLIKE_PHOTO,
         photoId
-    }
-}
-
-//api actions
-function getFeed(){
-    return (dispatch, getState) =>{
-        const {user: {token}}=getState();
-        fetch("/images/", {
-            headers:{
-                Authorization: `JWT ${token}`
-
-            }
-        } )
-        .then(response =>{
-            if(response.status===401){
-                dispatch(userActions.logout());
-            }
-            return response.json();
-        })
-        .then(json=>dispatch(setFeed(json)));
     };
 }
 
-
-function likePhoto(photoId){
-    return (dispatch, getState) => {
-        dispatch(doLikePhoto(photoId))
-    }
+function addComment(photoId, comment) {
+    return {
+        type: ADD_COMMENT,
+        photoId,
+        comment
+    };
 }
 
+// API Actions
 
-//initial state
+function getFeed() {
+    return (dispatch, getState) => {
+        const { user: { token } } = getState();
+        fetch("/images/", {
+            headers: {
+                Authorization: `JWT ${token}`
+            }
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    dispatch(userActions.logout());
+                }
+                return response.json();
+            })
+            .then(json => {
+                dispatch(setFeed(json));
+            });
+    };
+}
 
-const initialState ={};
+function likePhoto(photoId) {
+    return (dispatch, getState) => {
+        dispatch(doLikePhoto(photoId));
+        const { user: { token } } = getState();
+        fetch(`/images/${photoId}/likes/`, {
+            method: "POST",
+            headers: {
+                Authorization: `JWT ${token}`
+            }
+        }).then(response => {
+            if (response.status === 401) {
+                dispatch(userActions.logout());
+            } else if (!response.ok) {
+                dispatch(doUnlikePhoto(photoId));
+            }
+        });
+    };
+}
 
-//reducer 
+function unlikePhoto(photoId) {
+    return (dispatch, getState) => {
+        dispatch(doUnlikePhoto(photoId));
+        const { user: { token } } = getState();
+        fetch(`/images/${photoId}/unlikes/`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `JWT ${token}`
+            }
+        }).then(response => {
+            if (response.status === 401) {
+                dispatch(userActions.logout());
+            } else if (!response.ok) {
+                dispatch(doLikePhoto(photoId));
+            }
+        });
+    };
+}
 
-function reducer(state=initialState, action){
-    switch(action.type){
+function commentPhoto(photoId, message) {
+    return (dispatch, getState) => {
+        const { user: { token } } = getState();
+        fetch(`/images/${photoId}/comments/`, {
+            method: "POST",
+            headers: {
+                Authorization: `JWT ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message
+            })
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    dispatch(userActions.logout());
+                }
+                return response.json();
+            })
+            .then(json => {
+                if (json.message) {
+                    dispatch(addComment(photoId, json));
+                }
+            });
+    };
+}
+// Initial State
+
+const initialState = {};
+
+// Reducer
+
+function reducer(state = initialState, action) {
+    switch (action.type) {
         case SET_FEED:
             return applySetFeed(state, action);
         case LIKE_PHOTO:
-            return applyLikePhoto(state,action);
+            return applyLikePhoto(state, action);
         case UNLIKE_PHOTO:
             return applyUnlikePhoto(state, action);
+        case ADD_COMMENT:
+            return applyAddComment(state, action);
         default:
-         return state;
+            return state;
     }
 }
 
+// Reducer Functions
 
-//reducer function
-
-function applySetFeed(state, action){
-    const {feed}=action;
-    return{
+function applySetFeed(state, action) {
+    const { feed } = action;
+    return {
         ...state,
         feed
     };
 }
 
-function applyLikePhoto(state, action){
-    const { photoId } = action;
-    const {feed} =state;
-   const updatedFeed=feed.map(photo =>{
-        if(photo.id==photoId){
-            return{...photo,is_liked:true, like_count: photo.like_count+1}
-        }
-        return photo;
-   });
-   return {...state, feed:updatedFeed};
-}
-
-function applyUnlikePhoto(state, action) {
+function applyLikePhoto(state, action) {
     const { photoId } = action;
     const { feed } = state;
     const updatedFeed = feed.map(photo => {
-        if (photo.id == photoId) {
-            return { ...photo, is_liked: false, like_count: photo.like_count -1 }
+        if (photo.id === photoId) {
+            return { ...photo, is_liked: true, like_count: photo.like_count + 1 };
         }
         return photo;
     });
     return { ...state, feed: updatedFeed };
 }
 
+function applyUnlikePhoto(state, action) {
+    const { photoId } = action;
+    const { feed } = state;
+    const updatedFeed = feed.map(photo => {
+        if (photo.id === photoId) {
+            return { ...photo, is_liked: false, like_count: photo.like_count - 1 };
+        }
+        return photo;
+    });
+    return { ...state, feed: updatedFeed };
+}
 
+function applyAddComment(state, action) {
+    const { photoId, comment } = action;
+    const { feed } = state;
+    const updatedFeed = feed.map(photo => {
+        if (photo.id === photoId) {
+            return {
+                ...photo,
+                comments: [...photo.comments, comment]
+            };
+        }
+        return photo;
+    });
+    return { ...state, feed: updatedFeed };
+}
+// Exports
 
-//export
-const actionCreators ={
-    getFeed
+const actionCreators = {
+    getFeed,
+    likePhoto,
+    unlikePhoto,
+    commentPhoto
 };
 
-export {actionCreators}
-//default
+export { actionCreators };
 
+// Export reducer by default
 
 export default reducer;
