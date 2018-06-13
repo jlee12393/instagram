@@ -5,7 +5,7 @@ import PhotoActions from "components/PhotoActions";
 import PhotoComments from "components/PhotoComments";
 import TimeStamp from "components/TimeStamp";
 import CommentBox from "components/CommentBox";
-// import UserList from "components/UserList";
+import UserList from "components/UserList";
 
 const FeedPhoto = (props, context) => {
   return (
@@ -43,9 +43,9 @@ const FeedPhoto = (props, context) => {
         <TimeStamp time={props.natural_time} />
         <CommentBox photoId={props.id} />
       </div>
-      {/* {props.seeingLikes && (
+      {props.seeingLikes && (
         <UserList title={context.t("Likes")} closeLikes={props.closeLikes} />
-      )} */}
+      )}
     </div>
   );
 };
@@ -58,7 +58,7 @@ FeedPhoto.propTypes = {
   id: PropTypes.number.isRequired,
   creator: PropTypes.shape({
     profile_image: PropTypes.string,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
   }).isRequired,
   location: PropTypes.string.isRequired,
   file: PropTypes.string.isRequired,

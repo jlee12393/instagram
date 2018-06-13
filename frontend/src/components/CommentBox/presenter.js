@@ -18,8 +18,7 @@ const CommentBox = (props, context) => (
 CommentBox.propTypes = {
     handleInputChange: PropTypes.func.isRequired,
     comment: PropTypes.string.isRequired,
-    handleKeyPress: PropTypes.func.isRequired,
-    photoId: PropTypes.number.isRequired
+    handleKeyPress: PropTypes.func.isRequired
 };
 
 CommentBox.contextTypes = {

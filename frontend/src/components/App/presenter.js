@@ -6,11 +6,13 @@ import Auth from "components/Auth";
 import Footer from "components/Footer";
 import Navigation from "components/Navigation";
 import Feed from "components/Feed";
-// import Explore from "components/Explore";
-// import Search from "components/Search";
+import Explore from "components/Explore";
+import Search from "components/Search";
+import Profile from "components/Profile";
+// import EditProfile from "components/EditProfile";
 
 const App = props => [
-    props.isLoggedIn ? <Navigation key={1} /> : null,
+    props.isLoggedIn ? <Navigation key={5} /> : null,
     props.isLoggedIn ? <PrivateRoutes key={2} /> : <PublicRoutes key={2} />,
     <Footer key={3} />
 ];
@@ -22,8 +24,10 @@ App.propTypes = {
 const PrivateRoutes = props => (
     <Switch>
         <Route exact path="/" component={Feed} />
-        {/* <Route path="/explore" component={Explore} /> */}
-        {/* <Route path="/search/:searchTerm" component={Search} /> */}
+        <Route path="/explore" component={Explore} />
+        <Route path="/search/:searchTerm" component={Search} />
+        <Route path="/profile" component={Profile} />
+        {/* <Route path="/accounts/edit" component={EditProfile} />    */}
     </Switch>
 );
 
