@@ -58,7 +58,6 @@ const Profile = (props, context) => {
                         </div>
                         <div className={styles.row}>
                             <span className={styles.bio}>{loggedInUser.bio}</span>
-                            {/* <span className={styles.website}>www.kaistent.org</span> */}
                             <a className={styles.website} href={loggedInUser.website}>
                                 {loggedInUser.website}
                             </a>
